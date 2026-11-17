@@ -1,0 +1,155 @@
+/* The Launch Radar: a trading terminal / game HUD. Dense, scannable, one accent.
+   Every visual is data: hairlines are the grid, amber marks rank and value, teal marks
+   what already trades. No gradients, no glass, no rounded cards, no decoration. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ink: #0a0f1c;
+  --panel: #0e1626;
+  --panel-2: #0c1322;
+  --line: #1c2a47;
+  --line-soft: #16223c;
+  --amber: #e9b44c;
+  --amber-dim: #7a6228;
+  --teal: #4ecdc4;
+  --text: #e8ecf4;
+  --muted: #8b98b3;
+  --faint: #5d6b87;
+  --pos: #7ddba3;
+  --neg: #f08080;
+  --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--ink); }
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.skip { position: absolute; left: -999px; top: 0; background: var(--amber); color: #111; padding: 8px 14px; }
+.skip:focus { left: 8px; top: 8px; z-index: 50; }
+.shell { max-width: 1240px; margin: 0 auto; padding: 0 20px 56px; }
+a { color: var(--amber); }
+
+/* Top bar: wordmark left, status readouts right. */
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.mark { width: 10px; height: 10px; background: var(--amber); flex: none; }
+.brand-name { font-size: 19px; font-weight: 750; letter-spacing: 0.04em; }
+.top-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+.top-meta div { display: flex; flex-direction: column; }
+.top-meta span { font-size: 10px; letter-spacing: 0.12em; color: var(--faint); text-transform: uppercase; }
+.top-meta b { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* HUD strip: one row of readouts, hairline separated. */
+.hud { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.hud div { padding: 12px 20px 12px 0; margin-right: 20px; border-right: 1px solid var(--line-soft); }
+.hud div:last-child { border-right: 0; }
+.hud span { display: block; font-size: 10px; letter-spacing: 0.12em; color: var(--faint); text-transform: uppercase; }
+.hud b { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hud small { display: block; color: var(--muted); font-size: 11.5px; }
+
+/* Panels: flat, square, hairline. */
+.panel { background: var(--panel); border: 1px solid var(--line); padding: 16px 18px; margin: 16px 0; }
+.panel h2 { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; font-weight: 650; }
+.panel h3 { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 20px 0 8px; font-weight: 650; }
+.sub { color: var(--muted); font-size: 13px; }
+.model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; margin: 8px 0; }
+.model-grid div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line-soft); padding: 6px 0; }
+.model-grid span { color: var(--muted); }
+.model-grid b { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+.formula { font-family: var(--mono); font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); padding: 10px 12px; margin: 10px 0; overflow-x: auto; }
+.formula code { font-family: inherit; }
+.sens { border-collapse: collapse; width: 100%; margin: 8px 0 4px; font-variant-numeric: tabular-nums; }
+.sens th, .sens td { border: 1px solid var(--line-soft); padding: 6px 10px; text-align: right; font-size: 13px; }
+.sens th { color: var(--muted); font-weight: 600; background: var(--panel-2); }
+.sens td.base { background: rgba(233, 180, 76, 0.16); font-weight: 700; color: var(--amber); }
+.sens caption { caption-side: bottom; text-align: left; color: var(--muted); font-size: 12px; padding-top: 8px; }
+
+/* Controls toolbar: compact, 40px tall, one row. */
+.controls { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin: 16px 0 0; }
+.field label, .field .sub { display: block; font-size: 10px; letter-spacing: 0.12em; color: var(--faint); text-transform: uppercase; margin-bottom: 4px; }
+.field input, .field select { background: var(--panel); color: var(--text); border: 1px solid var(--line); padding: 8px 10px; font-size: 13.5px; font-family: inherit; min-width: 230px; border-radius: 0; }
+.field select { min-width: 180px; }
+.field input:focus, .field select:focus { outline: 2px solid var(--amber); outline-offset: 0; border-color: var(--amber); }
+.tabs { display: flex; }
+.tabs button { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-left: 0; padding: 8px 16px; font-size: 13.5px; cursor: pointer; font-family: inherit; transition: transform 160ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out); }
+.tabs button:first-child { border-left: 1px solid var(--line); }
+.tabs button[aria-pressed="true"] { background: var(--amber); color: #14100a; border-color: var(--amber); font-weight: 650; }
+.tabs button:active { transform: scale(0.97); }
+.count { color: var(--muted); font-size: 13px; margin-left: auto; padding-bottom: 9px; font-variant-numeric: tabular-nums; }
+
+/* Table: hairline rows, 40px, tabular numbers. */
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; }
+caption { caption-side: top; text-align: left; color: var(--muted); font-size: 12.5px; padding-bottom: 8px; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--line-soft); text-align: left; vertical-align: middle; }
+thead th { color: var(--faint); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+thead th button { background: none; border: 0; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; padding: 0; transition: color 160ms var(--ease-out); }
+thead th button:hover { color: var(--text); }
+thead th button:active { transform: scale(0.97); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody tr { cursor: pointer; transition: background-color 160ms var(--ease-out); }
+tbody tr:active { background: #152238; }
+tbody tr[data-selected="true"] { background: #16233f; box-shadow: inset 2px 0 0 var(--amber); }
+.name b { display: block; font-weight: 600; }
+.name .sub { display: block; font-size: 12px; }
+.pos { color: var(--pos); }
+.neg { color: var(--neg); }
+.rank1 { color: var(--amber); font-weight: 700; }
+.implied { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+.implied .bar { width: 84px; height: 4px; background: #1a2742; flex: none; }
+.implied .bar i { display: block; height: 100%; background: var(--amber); }
+.status { font-size: 11px; letter-spacing: 0.08em; color: var(--amber); border: 1px solid var(--amber-dim); padding: 2px 7px; white-space: nowrap; text-transform: uppercase; }
+.status.live { color: var(--teal); border-color: #2a6f6a; }
+.badge { font-size: 10px; letter-spacing: 0.1em; color: var(--amber); border: 1px solid var(--amber-dim); padding: 1px 5px; margin-left: 6px; white-space: nowrap; }
+.empty { text-align: center; padding: 36px 16px; }
+.empty h2 { margin: 0 0 6px; }
+.button { background: var(--amber); color: #14100a; border: 0; padding: 9px 18px; font-size: 13.5px; font-weight: 650; cursor: pointer; font-family: inherit; transition: transform 160ms var(--ease-out); }
+.button:active { transform: scale(0.97); }
+
+/* Detail dialog: modal, centered origin, enters opacity + scale(0.97). */
+dialog.detail { background: var(--panel); color: var(--text); border: 1px solid var(--line); max-width: 680px; width: calc(100% - 40px); padding: 0; }
+dialog.detail::backdrop { background: rgba(4, 8, 18, 0.72); }
+dialog.detail[open] { transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out); }
+dialog.detail[open]::backdrop { transition: opacity 220ms var(--ease-out); }
+@starting-style {
+  dialog.detail[open] { opacity: 0; transform: scale(0.97); }
+  dialog.detail[open]::backdrop { opacity: 0; }
+}
+.detail-head { display: flex; justify-content: space-between; gap: 16px; padding: 12px 20px 0; }
+.detail-head h2 { font-size: 21px; margin: 3px 0 2px; font-weight: 700; }
+.detail-head .sub { margin: 0; }
+.detail-head .rankline { font-size: 11px; letter-spacing: 0.12em; color: var(--amber); text-transform: uppercase; }
+.close { background: var(--panel-2); color: var(--text); border: 1px solid var(--line); padding: 8px 14px; cursor: pointer; font-family: inherit; height: fit-content; transition: transform 160ms var(--ease-out); }
+.close:active { transform: scale(0.97); }
+.detail-section { padding: 2px 20px 12px; }
+.detail-section h3 { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 10px 0 6px; font-weight: 650; }
+.equation { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+.equation div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line-soft); padding: 3px 0; }
+.equation span { color: var(--muted); }
+.equation b { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+.steps { margin: 0; padding-left: 20px; }
+.steps li { margin: 6px 0; }
+.steps li::marker { color: var(--amber); font-weight: 700; }
+.steps li b { font-weight: 600; }
+.steps .cost { display: block; color: var(--muted); font-size: 12.5px; margin-top: 1px; }
+.foot { color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 8px; }
+.foot p { margin: 6px 0; max-width: 780px; }
+@media (max-width: 760px) {
+  .model-grid, .equation { grid-template-columns: 1fr; }
+  .implied .bar { display: none; }
+  .top-meta { gap: 14px; }
+}
+@media (hover: hover) and (pointer: fine) {
+  tbody tr:hover { background: #131e35; }
+  tbody tr[data-selected="true"]:hover { background: #16233f; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0ms !important; }
+  dialog.detail[open] { transform: none; }
+}
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
